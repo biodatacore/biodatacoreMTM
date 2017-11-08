@@ -3,7 +3,7 @@
 
 test_that('fs_sub works with atomic substitution', {
     fos <- list(a ~ b + c, a ~ e + c)
-    new_fos <- fs_sub(fos, 'a', c(1, 2))
+    new_fos <- fs_sub(fos, 'a', c(1, 2), named = FALSE)
 
     expect_equivalent(new_fos[[1]], 1 ~ b + c)
     expect_equivalent(new_fos[[2]], 2 ~ b + c)
@@ -13,7 +13,7 @@ test_that('fs_sub works with atomic substitution', {
 
 test_that('fs_sub works with list substitution', {
     fos <- list(a ~ b + c, a ~ e + c)
-    new_fos <- fs_sub(fos, 'a', list('d + e', as.name('f + g')))
+    new_fos <- fs_sub(fos, 'a', list('d + e', as.name('f + g')), named = FALSE)
 
     expect_equivalent(new_fos[[1]], "d + e" ~ b + c)
     expect_equivalent(new_fos[[2]], `f + g` ~ b + c)
@@ -25,7 +25,7 @@ test_that('fs_sub works with list substitution', {
 
 test_that('fs_sub works with just formula passed', {
     fos <- a ~ b + c
-    new_fos <- fs_sub(fos, 'b', list('d + e', as.name('f + g')))
+    new_fos <- fs_sub(fos, 'b', list('d + e', as.name('f + g')), named = FALSE)
 
     expect_equivalent(new_fos[[1]], a ~ "d + e" + c)
     expect_equivalent(new_fos[[2]], a ~ `f + g` + c)
@@ -38,7 +38,7 @@ test_that('f_subs works uncrossed', {
     fo <- a ~ b + c
     subs <- list(a = c(1, 2), b = list('c+d', as.name('f + g')))
 
-    new_fos = f_subs(fo, subs, cross = FALSE)
+    new_fos = f_subs(fo, subs, cross = FALSE, named = FALSE)
 
     expect_equivalent(new_fos[[1]], 1 ~ b + c)
     expect_equivalent(new_fos[[2]], 2 ~ b + c)
@@ -52,7 +52,7 @@ test_that('f_subs works crossed', {
     fo <- a ~ b + c
     subs <- list(a = c(1, 2), b = list('c+d', as.name('f + g')))
 
-    new_fos = f_subs(fo, subs, cross = TRUE)
+    new_fos = f_subs(fo, subs, cross = TRUE, named = FALSE)
 
     expect_equivalent(new_fos[[1]], 1 ~ "c+d" + c)
     expect_equivalent(new_fos[[2]], 1 ~ `f + g` + c)

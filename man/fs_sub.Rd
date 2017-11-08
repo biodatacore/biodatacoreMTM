@@ -4,7 +4,7 @@
 \alias{fs_sub}
 \title{Substitute a vector of replacements for a single term into a list of formulas}
 \usage{
-fs_sub(fos, term, sub)
+fs_sub(fos, term, sub, named = TRUE)
 }
 \arguments{
 \item{fos}{formula or list of formulas}
@@ -13,10 +13,16 @@ fs_sub(fos, term, sub)
 
 \item{sub}{vector: the terms to be substituted in. A formula is generated for
 each element of sub}
+
+\item{named}{scalar logical: Whether or not character substitutions
+should be passed as names.}
 }
 \value{
 list
 }
 \description{
 Substitute a vector of replacements for a single term into a list of formulas
+}
+\seealso{
+f_subs
 }

@@ -14,5 +14,7 @@ RoxygenNote: 6.0.1
 Imports: magrittr,
     rlang,
     purrr,
-    biodatacoreUtils
+    biodatacoreUtils,
+    dplyr,
+    glue
 VignetteBuilder: knitr

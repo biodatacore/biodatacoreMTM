@@ -3,7 +3,8 @@
 \docType{package}
 \name{biodatacoreTMM-package}
 \alias{biodatacoreTMM-package}
-\title{biodatacoreASM}
+\alias{biodatacoreTMM}
+\title{biodatacoreTMM}
 \description{
 Code to streamline omics-like analyses
 }

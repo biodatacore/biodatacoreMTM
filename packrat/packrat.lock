@@ -47,12 +47,12 @@ Requires: Rcpp, bindr, plogr
 Package: biodatacoreUtils
 Source: github
 Version: 0.0.0.9000
-Hash: 045d1a6b24dad6977da05d2f6b666ab4
+Hash: 4d6c7724a9cba920784b7d2e754af545
 Requires: dplyr, magrittr, naturalsort, purrr, rlang
 GithubRepo: biodatacoreUtils
 GithubUsername: biodatacore
 GithubRef: master
-GithubSha1: bc31298bf1f9748c51b8f25b8dd78aadc1b00e5e
+GithubSha1: 23a99161a2cba524b2001cc32db82fefceae3c75
 
 Package: bitops
 Source: CRAN
@@ -64,11 +64,23 @@ Source: CRAN
 Version: 1.0-6
 Hash: 931f9972deae0f205e1c78a51f33149b
 
+Package: broom
+Source: CRAN
+Version: 0.4.2
+Hash: 7ebcffa46afb467e3f3c5687946f6e1a
+Requires: dplyr, plyr, psych, reshape2, stringr, tidyr
+
 Package: caTools
 Source: CRAN
 Version: 1.17.1
 Hash: 97cb6f6293cd18d17df77a6383cc6763
 Requires: bitops
+
+Package: cellranger
+Source: CRAN
+Version: 1.1.0
+Hash: 4e1ef4d099b0c5fd531a3938cf4624bd
+Requires: rematch, tibble
 
 Package: commonmark
 Source: CRAN
@@ -93,8 +105,8 @@ Requires: R6, assertthat, crayon, rprojroot
 
 Package: devtools
 Source: CRAN
-Version: 1.13.3
-Hash: 2e91d10786ace8f6258480f576bb91f3
+Version: 1.13.4
+Hash: 80a77b22f641002c7ce0343baeaee300
 Requires: digest, git2r, httr, jsonlite, memoise, rstudioapi, whisker,
     withr
 
@@ -116,6 +128,12 @@ Version: 0.10.1
 Hash: 54d95f4ec6d0300100413ed0127d89ae
 Requires: stringr
 
+Package: forcats
+Source: CRAN
+Version: 0.2.0
+Hash: e5a3b0b96a39f5581467b0c6366f7408
+Requires: magrittr, tibble
+
 Package: git2r
 Source: CRAN
 Version: 0.19.0
@@ -123,13 +141,24 @@ Hash: f4f7966fc357f60dc62dbffcea917eef
 
 Package: glue
 Source: CRAN
-Version: 1.1.1
-Hash: dfd5a27768175ae51d08dc6beba1ef11
+Version: 1.2.0
+Hash: 381e42baedecc633c0e547a0c7ca9de7
+
+Package: haven
+Source: CRAN
+Version: 1.1.0
+Hash: 16cc6931b26cee1e1a7607be627be1b8
+Requires: Rcpp, forcats, hms, readr, tibble
 
 Package: highr
 Source: CRAN
 Version: 0.6
 Hash: aa3d5b7912b5fed4b546ed5cd2a1760b
+
+Package: hms
+Source: CRAN
+Version: 0.3
+Hash: 3fca8a1c97e6cfb297fe3f4690f82c58
 
 Package: htmltools
 Source: CRAN
@@ -154,6 +183,17 @@ Version: 1.17
 Hash: f6b2bf543ee3e25f5b92bb46f9958c5f
 Requires: digest, evaluate, highr, markdown, stringr, yaml
 
+Package: lazyeval
+Source: CRAN
+Version: 0.2.1
+Hash: 88926ad9c43581fd0822a37c8ed09f05
+
+Package: lubridate
+Source: CRAN
+Version: 1.7.1
+Hash: 4393610161ddb7066e9ca3f7aa2188bd
+Requires: Rcpp, stringr
+
 Package: magrittr
 Source: CRAN
 Version: 1.5
@@ -175,6 +215,17 @@ Package: mime
 Source: CRAN
 Version: 0.5
 Hash: 463550cf44fb6f0a2359368f42eebe62
+
+Package: mnormt
+Source: CRAN
+Version: 1.5-5
+Hash: d0d5efbb1fb26d2dc5f9394c223084b5
+
+Package: modelr
+Source: CRAN
+Version: 0.1.1
+Hash: dc3b2de1720a22560510dccbdffe2c17
+Requires: broom, dplyr, lazyeval, magrittr, purrr, tibble, tidyr
 
 Package: naturalsort
 Source: CRAN
@@ -201,6 +252,12 @@ Source: CRAN
 Version: 0.1-1
 Hash: fb19215402e2d9f1c7f803dcaa806fc2
 
+Package: plyr
+Source: CRAN
+Version: 1.8.4
+Hash: 9598fbff0cce13bee89ae3a50230d93f
+Requires: Rcpp
+
 Package: praise
 Source: CRAN
 Version: 1.0.0
@@ -212,11 +269,40 @@ Version: 0.1.3
 Hash: 8ccad58aff7acbc034c5e181def92c99
 Requires: Rcpp, stringr
 
+Package: psych
+Source: CRAN
+Version: 1.7.8
+Hash: a9e7713423365e42e06413285a89e610
+Requires: mnormt
+
 Package: purrr
 Source: CRAN
 Version: 0.2.4
 Hash: a80b244ccd3fdb33a0ff2be3c50dd648
 Requires: magrittr, rlang, tibble
+
+Package: readr
+Source: CRAN
+Version: 1.1.1
+Hash: ea0a469092f234fed40b574695ce7c0b
+Requires: BH, R6, Rcpp, hms, tibble
+
+Package: readxl
+Source: CRAN
+Version: 1.0.0
+Hash: 006771e12b2ae14b7dd6f77dfb70d802
+Requires: Rcpp, cellranger, tibble
+
+Package: rematch
+Source: CRAN
+Version: 1.0.1
+Hash: ad4faf59e7611117ff165817074c50c7
+
+Package: reshape2
+Source: CRAN
+Version: 1.4.2
+Hash: cca35d2c477d99d8bc53908939eb659e
+Requires: Rcpp, plyr, stringr
 
 Package: rlang
 Source: CRAN
@@ -270,6 +356,19 @@ Source: CRAN
 Version: 1.3.4
 Hash: 3b72bdedb6c27fb216574ab9b15f2d43
 Requires: Rcpp, rlang
+
+Package: tidyr
+Source: CRAN
+Version: 0.7.2
+Hash: be0c92fa0a2b71ae11596e4166891314
+Requires: Rcpp, dplyr, glue, magrittr, purrr, rlang, stringi, tibble,
+    tidyselect
+
+Package: tidyselect
+Source: CRAN
+Version: 0.2.3
+Hash: d6505593309872018404925991bff808
+Requires: Rcpp, glue, purrr, rlang
 
 Package: whisker
 Source: CRAN

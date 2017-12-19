@@ -2,16 +2,16 @@
 % Please edit documentation in R/add.R
 \name{add_p.adjust}
 \alias{add_p.adjust}
-\alias{add_bonf_p}
-\alias{add_fdr_p}
+\alias{add_bonf_pv}
+\alias{add_fdr_pv}
 \title{Adds columns of adjusted p-values}
 \usage{
 add_p.adjust(data, method = stats::p.adjust.methods, p.value = "p.value",
   var = NULL)
 
-add_bonf_p(data, p.value = "p.value", var = NULL)
+add_bonf_pv(data, p.value = "p.value", var = NULL)
 
-add_fdr_p(data, p.value = "p.value", var = NULL)
+add_fdr_pv(data, p.value = "p.value", var = NULL)
 }
 \arguments{
 \item{data}{data frame}
@@ -33,6 +33,6 @@ Adds adjusted p-values to a dataframe. Helper functions wrap `add_p.adjust`
 for common additions.
 }
 \seealso{
-Other augmenters: \code{\link{add_bdc_p}},
-  \code{\link{add_nlog10_p}}
+Other augmenters: \code{\link{add_bdc_pv}},
+  \code{\link{add_nlog10_pv}}
 }

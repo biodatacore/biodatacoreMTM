@@ -31,14 +31,14 @@ add_p.adjust <- function(data, method = stats::p.adjust.methods, p.value = 'p.va
 #' @rdname add_p.adjust
 #' @export
 #'
-add_bonf_p <- function(data, p.value = 'p.value', var = NULL) {
+add_bonf_pv <- function(data, p.value = 'p.value', var = NULL) {
   add_p.adjust(data, method = 'bonferroni', p.value = p.value, var = var)
 }
 
 #' @rdname add_p.adjust
 #' @export
 #'
-add_fdr_p <- function(data, p.value = 'p.value', var = NULL) {
+add_fdr_pv <- function(data, p.value = 'p.value', var = NULL) {
   add_p.adjust(data, method = 'fdr', p.value = p.value, var = var)
 }
 
@@ -56,7 +56,7 @@ add_fdr_p <- function(data, p.value = 'p.value', var = NULL) {
 #' @return data frame
 #' @export
 #'
-add_nlog10_p <- function(data, p.value = 'p.value', var = NULL) {
+add_nlog10_pv <- function(data, p.value = 'p.value', var = NULL) {
 
   if (rlang::is_null(var)) {
     var <- 'neg_log10_pvalue'
@@ -69,6 +69,7 @@ add_nlog10_p <- function(data, p.value = 'p.value', var = NULL) {
 
 #' Shortcut for adding adjusted p-values common to biodatacore workflows.
 #'
+#' @family bdc functions
 #' @family augmenters
 #'
 #' @inheritParams add_p.adjust
@@ -76,9 +77,9 @@ add_nlog10_p <- function(data, p.value = 'p.value', var = NULL) {
 #' @return data frame
 #' @export
 #'
-add_bdc_p <- function(data, p.value = 'p.value') {
+add_bdc_pv <- function(data, p.value = 'p.value') {
   data %>%
-    add_bonf_p(p.value = p.value) %>%
-    add_fdr_p(p.value = p.value) %>%
-    add_nlog10_p(p.value = p.value)
+    add_bonf_pv(p.value = p.value) %>%
+    add_fdr_pv(p.value = p.value) %>%
+    add_nlog10_pv(p.value = p.value)
 }

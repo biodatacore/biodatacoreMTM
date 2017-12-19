@@ -21,9 +21,10 @@ contextualize(x, ...)
 data frame
 }
 \description{
-contextualize methods always return either a one-row data frame, or NULL. It
-is different from \code{broom::glance} in that it gives information about how
-the model was run, instead of EG fit statistics.
+contextualize methods always return either a one-row data frame (except on
+NULL, which returns an empty data frame). It is different from
+\code{broom::glance} in that it gives information about how the model was
+run, instead of EG fit statistics.
 }
 \section{Methods (by class)}{
 \itemize{

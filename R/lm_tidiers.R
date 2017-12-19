@@ -122,7 +122,7 @@ process_lm <- function(ret, x, conf.int = FALSE, conf.level = .95,
 # Contextualize -----------------------------------------------------------
 
 
-#' Title
+#' Contextualizes an lm model
 #'
 #' @param ... Arguments passed to other methods. Currently unused.
 #'
@@ -130,22 +130,22 @@ process_lm <- function(ret, x, conf.int = FALSE, conf.level = .95,
 #' @export
 #'
 contextualize.lm <- function(x, ...) {
-  # It seems that residuals(x) might add in NA for observations that were
-  # removed during modeling due to NA. However, x$residuals seems to only be
-  # there for observations that were modeled.
-  sample_size <- length(x$residuals)
+
+  data_size <- nrow(x$data)
+  model_sample_size <- length(x$residuals)
   fo <- stats::formula(x)
 
 
   dplyr::data_frame(
-    sample_size = sample_size,
+    data_size = data_size,
+    model_sample_size = model_sample_size,
     formula = biodatacoreUtils::deparse2(fo),
     response = biodatacoreUtils::deparse2(rlang::f_lhs(fo)),
     control = biodatacoreUtils::deparse2(rlang::f_rhs(fo))
   )
 }
 
-#' Title
+#' Contextualizes a glm model
 #'
 #' @param ... Arguments passed to other methods. Currently unused.
 #'

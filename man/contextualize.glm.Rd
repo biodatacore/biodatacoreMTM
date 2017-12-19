@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_tidiers.R
 \name{contextualize.glm}
 \alias{contextualize.glm}
-\title{Title}
+\title{Contextualizes a glm model}
 \usage{
 \method{contextualize}{glm}(x, ...)
 }
@@ -13,5 +13,5 @@
 data frame
 }
 \description{
-Title
+Contextualizes a glm model
 }

@@ -32,7 +32,7 @@ tidy2 <- function(x, ...) {
 #'
 #' @export
 tidy2.NULL <- function(x, ...) {
-  data.frame()
+  broom::tidy(x)
 }
 
 
@@ -52,7 +52,5 @@ tidy2.NULL <- function(x, ...) {
 #'
 #' @export
 tidy2.default <- function(x, ...) {
-  warning(paste("No method for tidying an S3 object of class",
-                class(x), ", using as.data.frame"))
-  as.data.frame(x)
+  broom::tidy(x)
 }

@@ -1,58 +1,268 @@
 ---
-title: "Modeling Setup for BioDataCore Workflow"
+title: "Modeling Example for BioDataCore Workflow"
 author: "Mir Henglin"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Modeling Setup for BioDataCore Workflow}
+%\VignetteIndexEntry{Modeling Setup for BioDataCore Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
+  ---
+  
+  # Data Generation
+  
+  First, let's generate a fake dataset to do our modeling on:
+  
+```{r}
+set.seed(12345)
+library(dplyr)
+library(biodatacoreUtils)
+library(purrr)
+library(biodatacoreTMM)
+dat$metabolites <- dat <-  list()
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+dat$metabolites$data <- 
+data_frame(
+id_no = 1:100,
+mzid_1 = c(runif(90, 0, 10000), rep(0, 10)), 
+mzid_2 = c(runif(50, 1000, 20000), rep(0, 50)), 
+mzid_3 = c(runif(90, 0, 1000), rep(0, 10))
+)
 
-## Vignette Info
+dat$metabolites$info <-
+data_frame(
+label = glue::glue('mzid_{1:3}'),
+metabolite_type = c('Eicosanoids', 'Eicosanoids', 'Bile Acids'),
+mz = runif(3, 200, 700),
+RT = runif(3, 1, 7)
+)
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+dat$clinical <-
+data_frame(
+id_no = 1:100,
+sex = rbinom(100, 1, 0.5),
+age = runif(100, 18, 85),
+diab =  c(rbinom(80, 1, 0.25), rep(NA, 20)),
+sbp = runif(100, 80, 160)
+)
 
-## Styles
+# shuffle to distribute NAs
+dat$metabolites$data %<>% mutate_all(~sample(., length(.)))
+dat$clinical         %<>% mutate_all(~sample(., length(.)))
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+dat$merged <-
+left_join(dat$metabolites$data, dat$clinical, by = 'id_no')
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
 
-## Figures
+walk(dat, ~print(head(.)))
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+# Data cleaning
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+Lets say we want to look at the effects of Eicosanoids on Diab and SBP, controlling for age and sex. Lets get a dataset that contains only those variables.
 
-## More Examples
+```{r}
+eics <-
+  dat$metabolites$info %>%
+  filter(metabolite_type == 'Eicosanoids') %>% 
+  pull(label)
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+control_vars <-
+  c('age', 'sex')
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+responses <-
+  c('sbp', 'diab')
+
+modeling_dat <- 
+  dat$merged %>%
+  select(!!responses, !!control_vars, !!eics)
+
+head(modeling_dat)
 ```
 
-Also a quote using `>`:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+The first thing we should do is check that each of our variables are of the proper form. We expect the Diabetes and Sex variables to be factors. We expect age, sbp to be numeric and non-negative. We expect that the metabolite variables metabolite variables to be numeric, and to have no NAs or 0s in them. We can use the `data_checks` function to accomplish all of these things easily
+```{r}
+factor_vars <- c('diab', 'sex')
+positive_numeric_vars <- c('sbp', 'age', eics)
+
+checks <-
+  list(
+    factors = list(vars = factor_vars, f = is.factor),
+    numeric = list(vars = positive_numeric_vars, f = is.numeric),
+    positive = list(vars = positive_numeric_vars, f = ~is_positive(., na_rm = TRUE)),
+    no_na = list(vars = eics, f = ~!anyNA(.)),
+    no_zeros = list(vars = eics, f = ~!any(. == 0))
+  )
+
+check_results <- data_check(modeling_dat, checks)
+
+
+# 
+# # Convert diab and sex to factors
+# modeling_dat %<>%
+#   mutate_at(vars(diab, sex), as.factor)
+
+
+```
+
+We can take a peek at the results using `dplyr::glimpse`
+
+```{r}
+glimpse(check_results)
+```
+
+As we can see, not all checks are met! We need to convert `diab` and `sex` to factors. And we need to handle the `0`s in the mzid variables.
+
+```{r}
+modeling_dat %<>%
+  mutate_at(vars(!!factor_vars), as.factor)
+```
+
+Convention for BDC data anlalyses says that missing values in metabolite varaibles should be imputed with one-quarter the minimum non-zero value. 
+
+```{r}
+modeling_dat %<>%
+  mutate_at(vars(!!eics), ~ifelse(. == 0, NA, .)) %>%
+  mutate_at(vars(!!eics), ~ifelse(is.na(.), min(., na.rm = TRUE) / 4, .))
+```
+
+Now we check again.
+
+```{r}
+check_results <- data_check(modeling_dat, checks)
+glimpse(check_results)
+
+# make this more informative
+```
+
+Alternatively, using code:
+
+```{r}
+all(unlist(check_results))
+```
+
+
+# Model Specification
+
+AS a reminder, we want to look at the effects of Eicosanoids on Diab and SBP, controlling for age and sex. If we wrote those modeling formulas out by hand, it would be messy, and require a lot of repeated typing. That is a recipe for mistakes. Instead, we will use `biodatacoreUtils::cross_some` and `biodatacoreUtils::f_cross_sub` to create a list of formulas.
+
+```{r}
+models <- response ~ control_vars + eic
+
+# Make this substituion easier!
+substitution_rules <-
+  cross_some(list(response = responses, eic = eics, control_vars = control_vars), 1:2)
+
+
+models <- f_cross_sub(list(basic_model = models), substitution_rules)
+
+models
+```
+
+Another way
+```{r}
+models <- list(
+  sbp = sbp ~ control_vars + eic,
+  diabetes = diab ~ control_vars + eic
+)
+
+
+substitution_rules <-
+  cross_some(list(eic = eics, control_vars = control_vars), 1) 
+
+models <- f_cross_sub(models, substitution_rules)
+
+models
+```
+
+
+# Modeling
+
+Now that we have our dataset and formulas, we can model!
+
+```{r}
+guess_glm_fam <- function(x) {
+  if (biodatacoreUtils::is_binary_valued(x, na_rm = TRUE)) {
+    binomial(link = 'logit')
+  } else {
+    gaussian(link = 'identity')
+  }
+}
+
+.model <- function(fo, data) {
+  response <- deparse2(rlang::f_lhs(fo))
+  fam <- guess_glm_fam(data[[response]])
+  out <- glm(fo, data = data, family = fam)
+  
+  fam_sub = parse(text = glue::glue('{fam$family}(link = {fam$link})'))[[1]]
+  out$call <- biodatacoreUtils::substitute_q(out$call, list(fo = fo, fam = fam_sub))
+  out
+}
+
+
+linear_models <-
+  map(models, function(fos) {
+    map(fos, function(fo) {
+      
+      .model(fo, modeling_dat)
+      
+    })
+  })
+
+linear_models
+```
+
+# Tidying
+```{r}
+tidy_models <- 
+  linear_models %>%
+  modify_depth(2, tidy2)
+
+contexts <- 
+  linear_models %>%
+  modify_depth(2, contextualize)
+
+
+tidy_models
+contexts
+ 
+```
+
+```{r}
+
+bindr <- 
+  . %>%
+   map(bind_rows, .id = 'model_number') %>% 
+  bind_rows(.id = 'model_name')
+
+tidy_models %<>% bindr
+contexts %<>% bindr
+
+
+out <- tidy_models %>% left_join(contexts)
+
+out
+```
+
+
+# Add Ons
+
+```{r}
+
+out %>%
+  add_bonf_pv(p.value = 'p.value') %>%
+  add_fdr_pv(p.value = 'p.value') %>%
+  add_nlog10_pv(p.value = 'p.value')
+
+
+```
+
+```{r}
+out %>%
+  add_bdc_pv()
+```
+

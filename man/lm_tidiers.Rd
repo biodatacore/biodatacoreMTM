@@ -2,33 +2,7 @@
 % Please edit documentation in R/lm_tidiers.R
 \name{lm_tidiers}
 \alias{lm_tidiers}
-\alias{tidy2.lm}
 \title{Tidying methods for a linear model}
-\usage{
-\method{tidy2}{lm}(x, conf.int = FALSE, conf.level = 0.95,
-  exponentiate = FALSE, quick = FALSE, ...)
-}
-\arguments{
-\item{x}{lm object}
-
-\item{conf.int}{whether to include a confidence interval}
-
-\item{conf.level}{confidence level of the interval, used only if
-\code{conf.int=TRUE}}
-
-\item{exponentiate}{whether to exponentiate the coefficient estimates
-and confidence intervals (typical for logistic regression)}
-
-\item{quick}{whether to compute a smaller and faster version, containing
-only the \code{term} and \code{estimate} columns.}
-
-\item{...}{extra arguments (not used)}
-}
 \description{
 Tidying methods for a linear model
-}
-\details{
-If you have missing values in your model data, you may need to refit
-  the model with \code{na.action = na.exclude}. See
-  \code{\link[broom]{tidy.lm}} for more information.
 }

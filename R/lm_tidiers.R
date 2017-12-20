@@ -11,13 +11,8 @@ NULL
 # Contextualize -----------------------------------------------------------
 
 
-#' Contextualizes an lm model
-#'
-#' @describeIn contextualize
-#'
-#' @param ... Arguments passed to other methods. Currently unused.
-#'
-#' @return data frame
+
+#' @rdname lm_tidiers
 #' @export
 #'
 contextualize.lm <- function(x, ...) {
@@ -36,13 +31,7 @@ contextualize.lm <- function(x, ...) {
   )
 }
 
-#' Contextualizes a glm model
-#'
-#' @describeIn contextualize
-#'
-#' @param ... Arguments passed to other methods. Currently unused.
-#'
-#' @return data frame
+#' @rdname lm_tidiers
 #' @export
 #'
 contextualize.glm <- function(x, ...) {

@@ -2,7 +2,19 @@
 % Please edit documentation in R/lm_tidiers.R
 \name{lm_tidiers}
 \alias{lm_tidiers}
+\alias{contextualize.lm}
+\alias{contextualize.glm}
 \title{Tidying methods for a linear model}
+\usage{
+\method{contextualize}{lm}(x, ...)
+
+\method{contextualize}{glm}(x, ...)
+}
+\arguments{
+\item{x}{model or other R object to convert to single-row data frame}
+
+\item{...}{other arguments passed to methods}
+}
 \description{
 Tidying methods for a linear model
 }

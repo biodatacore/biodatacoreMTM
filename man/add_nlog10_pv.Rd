@@ -24,6 +24,5 @@ pvalues. It ends up with a more natural scale, where larger values are "more
 significant."
 }
 \seealso{
-Other augmenters: \code{\link{add_bdc_pv}},
-  \code{\link{add_p.adjust}}
+Other augmenters: \code{\link{add_p.adjust}}
 }

@@ -17,5 +17,6 @@ Imports: magrittr,
     biodatacoreUtils,
     dplyr,
     glue,
-    broom
+    broom,
+    tidyr
 VignetteBuilder: knitr

@@ -67,19 +67,3 @@ add_nlog10_pv <- function(data, p.value = 'p.value', var = NULL) {
   data
 }
 
-#' Shortcut for adding adjusted p-values common to biodatacore workflows.
-#'
-#' @family bdc functions
-#' @family augmenters
-#'
-#' @inheritParams add_p.adjust
-#'
-#' @return data frame
-#' @export
-#'
-add_bdc_pv <- function(data, p.value = 'p.value') {
-  data %>%
-    add_bonf_pv(p.value = p.value) %>%
-    add_fdr_pv(p.value = p.value) %>%
-    add_nlog10_pv(p.value = p.value)
-}

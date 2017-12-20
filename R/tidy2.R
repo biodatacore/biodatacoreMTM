@@ -5,8 +5,8 @@
 #' further manipulation by packages like dplyr, reshape2, ggplot2 and ggvis.
 #'
 #' @section Getting Help: Always look at the \code{broom::tidy} equivalent for
-#'   more help on a function. Almost always a \code{tidy2} method will call the
-#'   \code{broom::tidy} method, and just add things in.
+#'   more help on a function. Almost always a \code{tidy2} method will be nearly
+#'   identical to a \code{broom::tidy} method just with a few things changed.
 #'
 #' @return All tidying methods return a \code{data.frame} without rownames. The
 #'   structure depends on the method chosen.

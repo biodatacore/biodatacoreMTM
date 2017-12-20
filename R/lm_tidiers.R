@@ -1,19 +1,19 @@
-
-# Tidy2 -------------------------------------------------------------------
-
-
-#' Workaround and enhancers for broom::tidy.lm models
+#' Tidying methods for a linear model
 #'
-#' Handles a specific case where some coefficents are NA in the model output. It
-#' preserves those coefficents as NA instead of removing them. Also adds
-#' additional output. Parameters \code{conf.int:quick} are original
-#' \code{\link[broom]{lm_tidiers}} parameters.
+#' @name lm_tidiers
 #'
 #' @details If you have missing values in your model data, you may need to refit
 #'   the model with \code{na.action = na.exclude}. See
 #'   \code{\link[broom]{tidy.lm}} for more information.
 #'
 #' @inheritParams broom::tidy.lm
+#'
+NULL
+
+# Tidy2 -------------------------------------------------------------------
+
+
+#' @rdname lm_tidiers
 #' @export
 tidy2.lm <- function(x, conf.int = FALSE, conf.level = .95,
                      exponentiate = FALSE, quick = FALSE, ...) {
@@ -31,7 +31,7 @@ tidy2.lm <- function(x, conf.int = FALSE, conf.level = .95,
 
   # quick passes NA properly
   if (quick) {
-    ret <- data.frame(term = names(co), estimate = unname(co))
+    ret <- data.frame(term = names(co), estimate = unname(co), stringsAsFactors = FALSE)
     return(process_lm(ret, x, conf.int = FALSE, exponentiate = exponentiate))
   } else {
     # This line exists to make it possible to call tidy2.lm on glm models. (glm
@@ -124,6 +124,8 @@ process_lm <- function(ret, x, conf.int = FALSE, conf.level = .95,
 
 #' Contextualizes an lm model
 #'
+#' @describeIn contextualize
+#'
 #' @param ... Arguments passed to other methods. Currently unused.
 #'
 #' @return data frame
@@ -146,6 +148,8 @@ contextualize.lm <- function(x, ...) {
 }
 
 #' Contextualizes a glm model
+#'
+#' @describeIn contextualize
 #'
 #' @param ... Arguments passed to other methods. Currently unused.
 #'

@@ -33,6 +33,5 @@ Adds adjusted p-values to a dataframe. Helper functions wrap `add_p.adjust`
 for common additions.
 }
 \seealso{
-Other augmenters: \code{\link{add_bdc_pv}},
-  \code{\link{add_nlog10_pv}}
+Other augmenters: \code{\link{add_nlog10_pv}}
 }

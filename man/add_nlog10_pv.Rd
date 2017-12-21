@@ -4,12 +4,12 @@
 \alias{add_nlog10_pv}
 \title{Adds -1*log_10() to a data frame}
 \usage{
-add_nlog10_pv(data, p.value = "p.value", var = NULL)
+add_nlog10_pv(data, p_value = "p.value", var = NULL)
 }
 \arguments{
 \item{data}{data frame}
 
-\item{p.value}{scalar character: name of the p-value column.}
+\item{p_value}{scalar character: name of the p-value column.}
 
 \item{var}{scalar character: name of the column to be created. if `NULL` then
 it attempts to create its own column. To avoid accidenntally overwriting an

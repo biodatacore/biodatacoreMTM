@@ -6,12 +6,12 @@
 \alias{add_fdr_pv}
 \title{Adds columns of adjusted p-values}
 \usage{
-add_p.adjust(data, method = stats::p.adjust.methods, p.value = "p.value",
+add_p.adjust(data, method = stats::p.adjust.methods, p_value = "p.value",
   var = NULL)
 
-add_bonf_pv(data, p.value = "p.value", var = NULL)
+add_bonf_pv(data, p_value = "p.value", var = NULL)
 
-add_fdr_pv(data, p.value = "p.value", var = NULL)
+add_fdr_pv(data, p_value = "p.value", var = NULL)
 }
 \arguments{
 \item{data}{data frame}
@@ -19,7 +19,7 @@ add_fdr_pv(data, p.value = "p.value", var = NULL)
 \item{method}{scalar character: which adjustment method to use. See
 \code{\link[stats]{p.adjust}} for more info.}
 
-\item{p.value}{scalar character: name of the p-value column.}
+\item{p_value}{scalar character: name of the p-value column.}
 
 \item{var}{scalar character: name of the column to be created. if `NULL` then
 it attempts to create its own column. To avoid accidenntally overwriting an

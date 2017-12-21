@@ -17,25 +17,6 @@ tidy2 <- function(x, ...) {
   UseMethod("tidy2")
 }
 
-
-
-#' tidy on a NULL input
-#'
-#' tidy on a NULL input returns an empty data frame, which means it can be
-#' combined with other data frames (treated as "empty")
-#'
-#' @inheritParams broom::tidy.NULL
-#' @param x A value NULL
-#' @param ... extra arguments (not used)
-#'
-#' @return An empty data.frame
-#'
-#' @export
-tidy2.NULL <- function(x, ...) {
-  broom::tidy(x)
-}
-
-
 #' Default tidying method
 #'
 #' By default, tidy uses \code{as.data.frame} to convert its output. This is

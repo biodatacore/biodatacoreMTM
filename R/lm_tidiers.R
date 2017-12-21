@@ -2,12 +2,38 @@
 #'
 #' @name lm_tidiers
 #'
-#'
+#' @inheritParams broom::tidy.lm
 #' @inheritParams contextualize
 #'
 NULL
 
 
+# tidy --------------------------------------------------------------------
+
+
+#' @rdname lm_tidiers
+
+#' @export
+#'
+tidy2.lm <- function(x, conf.int = FALSE, conf.level = 0.95,
+                     exponentiate = FALSE, quick = FALSE, ...) {
+
+  out <- broom::tidy(x, conf.int, conf.level, exponentiate, quick)
+
+  if (anyNA(coef(x))) {
+    coefs <- coef(x)
+    na_coefs <- names(coefs)[rlang::are_na(coefs)]
+
+    out %<>%
+      dplyr::add_row(term = na_coefs)
+
+    # Arrange in original order
+    out %<>%
+      dplyr::slice(match(.data$term, names(coefs)))
+  }
+
+  out
+}
 # Contextualize -----------------------------------------------------------
 
 

@@ -2,18 +2,33 @@
 % Please edit documentation in R/lm_tidiers.R
 \name{lm_tidiers}
 \alias{lm_tidiers}
+\alias{tidy2.lm}
 \alias{contextualize.lm}
 \alias{contextualize.glm}
 \title{Tidying methods for a linear model}
 \usage{
+\method{tidy2}{lm}(x, conf.int = FALSE, conf.level = 0.95,
+  exponentiate = FALSE, quick = FALSE, ...)
+
 \method{contextualize}{lm}(x, ...)
 
 \method{contextualize}{glm}(x, ...)
 }
 \arguments{
-\item{x}{model or other R object to convert to single-row data frame}
+\item{x}{lm object}
 
-\item{...}{other arguments passed to methods}
+\item{conf.int}{whether to include a confidence interval}
+
+\item{conf.level}{confidence level of the interval, used only if
+\code{conf.int=TRUE}}
+
+\item{exponentiate}{whether to exponentiate the coefficient estimates
+and confidence intervals (typical for logistic regression)}
+
+\item{quick}{whether to compute a smaller and faster version, containing
+only the \code{term} and \code{estimate} columns.}
+
+\item{...}{extra arguments (not used)}
 }
 \description{
 Tidying methods for a linear model

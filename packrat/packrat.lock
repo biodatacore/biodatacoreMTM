@@ -44,6 +44,17 @@ Version: 0.2
 Hash: e011aef1e6b2f8ff15d833f56abcf0ba
 Requires: Rcpp, bindr, plogr
 
+Package: biodatacoreImport
+Source: github
+Version: 0.1.0
+Hash: be163faed8ccb2955dde8281484afef9
+Requires: biodatacoreUtils, dplyr, haven, lubridate, magrittr, purrr,
+    readr, readxl, rlang, stringr, tidyr
+GithubRepo: biodatacoreImport
+GithubUsername: biodatacore
+GithubRef: master
+GithubSha1: e59e85e660b5e32e4ef2eec747f18214c62e1ff0
+
 Package: biodatacoreUtils
 Source: github
 Version: 0.0.0.9000

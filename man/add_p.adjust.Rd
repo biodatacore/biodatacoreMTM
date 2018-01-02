@@ -2,16 +2,16 @@
 % Please edit documentation in R/add.R
 \name{add_p.adjust}
 \alias{add_p.adjust}
-\alias{add_bonf_p}
-\alias{add_fdr_p}
+\alias{add_bonf_pv}
+\alias{add_fdr_pv}
 \title{Adds columns of adjusted p-values}
 \usage{
-add_p.adjust(data, method = stats::p.adjust.methods, p.value = "p.value",
+add_p.adjust(data, method = stats::p.adjust.methods, p_value = "p.value",
   var = NULL)
 
-add_bonf_p(data, p.value = "p.value", var = NULL)
+add_bonf_pv(data, p_value = "p.value", var = NULL)
 
-add_fdr_p(data, p.value = "p.value", var = NULL)
+add_fdr_pv(data, p_value = "p.value", var = NULL)
 }
 \arguments{
 \item{data}{data frame}
@@ -19,7 +19,7 @@ add_fdr_p(data, p.value = "p.value", var = NULL)
 \item{method}{scalar character: which adjustment method to use. See
 \code{\link[stats]{p.adjust}} for more info.}
 
-\item{p.value}{scalar character: name of the p-value column.}
+\item{p_value}{scalar character: name of the p-value column.}
 
 \item{var}{scalar character: name of the column to be created. if `NULL` then
 it attempts to create its own column. To avoid accidenntally overwriting an
@@ -33,6 +33,5 @@ Adds adjusted p-values to a dataframe. Helper functions wrap `add_p.adjust`
 for common additions.
 }
 \seealso{
-Other augmenters: \code{\link{add_bdc_p}},
-  \code{\link{add_nlog10_p}}
+Other augmenters: \code{\link{add_nlog10_pv}}
 }

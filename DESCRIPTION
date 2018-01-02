@@ -1,8 +1,8 @@
-Package: biodatacoreTMM
-Title: Utilities for Tidy Modeling of Metabolite Data
+Package: biodatacoreMTM
+Title: Utilities for Tidy Modeling
 Version: 0.0.0.9000
 Authors@R: person("Mir", "Henglin", email = "mir.henglin@gmail.com", role = c("aut", "cre"))
-Description: Utilities for Tidy Modeling of Metabolite Data.
+Description: Utilities for Tidy Modeling.
 Depends: R (>= 3.4.2)
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -17,5 +17,6 @@ Imports: magrittr,
     biodatacoreUtils,
     dplyr,
     glue,
-    broom
+    broom,
+    tidyr
 VignetteBuilder: knitr

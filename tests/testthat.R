@@ -1,4 +1,4 @@
 library(testthat)
-library(biodatacoreTMM)
+library(biodatacoreMTM)
 
-test_check("biodatacoreTMM")
+test_check("biodatacoreMTM")

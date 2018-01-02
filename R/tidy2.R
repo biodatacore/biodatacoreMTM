@@ -5,8 +5,8 @@
 #' further manipulation by packages like dplyr, reshape2, ggplot2 and ggvis.
 #'
 #' @section Getting Help: Always look at the \code{broom::tidy} equivalent for
-#'   more help on a function. Almost always a \code{tidy2} method will call the
-#'   \code{broom::tidy} method, and just add things in.
+#'   more help on a function. Almost always a \code{tidy2} method will be nearly
+#'   identical to a \code{broom::tidy} method just with a few things changed.
 #'
 #' @return All tidying methods return a \code{data.frame} without rownames. The
 #'   structure depends on the method chosen.
@@ -16,25 +16,6 @@
 tidy2 <- function(x, ...) {
   UseMethod("tidy2")
 }
-
-
-
-#' tidy on a NULL input
-#'
-#' tidy on a NULL input returns an empty data frame, which means it can be
-#' combined with other data frames (treated as "empty")
-#'
-#' @inheritParams broom::tidy.NULL
-#' @param x A value NULL
-#' @param ... extra arguments (not used)
-#'
-#' @return An empty data.frame
-#'
-#' @export
-tidy2.NULL <- function(x, ...) {
-  data.frame()
-}
-
 
 #' Default tidying method
 #'
@@ -52,7 +33,5 @@ tidy2.NULL <- function(x, ...) {
 #'
 #' @export
 tidy2.default <- function(x, ...) {
-  warning(paste("No method for tidying an S3 object of class",
-                class(x), ", using as.data.frame"))
-  as.data.frame(x)
+  broom::tidy(x)
 }

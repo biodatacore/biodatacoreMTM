@@ -1,155 +1,63 @@
-
-# Tidy2 -------------------------------------------------------------------
-
-
-#' Workaround and enhancers for broom::tidy.lm models
+#' Tidying methods for a linear model
 #'
-#' Handles a specific case where some coefficents are NA in the model output. It
-#' preserves those coefficents as NA instead of removing them. Also adds
-#' additional output. Parameters \code{conf.int:quick} are original
-#' \code{\link[broom]{lm_tidiers}} parameters.
-#'
-#' @details If you have missing values in your model data, you may need to refit
-#'   the model with \code{na.action = na.exclude}. See
-#'   \code{\link[broom]{tidy.lm}} for more information.
+#' @name lm_tidiers
 #'
 #' @inheritParams broom::tidy.lm
+#' @inheritParams contextualize
+#'
+NULL
+
+
+# tidy --------------------------------------------------------------------
+
+
+#' @rdname lm_tidiers
+
 #' @export
-tidy2.lm <- function(x, conf.int = FALSE, conf.level = .95,
+#'
+tidy2.lm <- function(x, conf.int = FALSE, conf.level = 0.95,
                      exponentiate = FALSE, quick = FALSE, ...) {
 
-  # These shenanigans is due to the fact that `broom::tidy` creates its
-  # summaries in two ways. The first by grabbing the coefficents from the model
-  # summary. The second by calling `confint` on the model. Then it cbinds it
-  # together. The issue is that if there is an NA coefficent, the coefficents
-  # will ignore the NA terms while `confint` will include them. This breaks the
-  # cbind, as it is attempting to cbind dataframes with different numbers of
-  # rows. Even if confidence intervals are not requested, NA coefs are omitted
-  # from the final result, a behavior I would like to avoid.
+  out <- broom::tidy(x, conf.int, conf.level, exponentiate, quick)
 
-  co <- stats::coef(x)
+  if (anyNA(coef(x))) {
+    coefs <- coef(x)
+    na_coefs <- names(coefs)[rlang::are_na(coefs)]
 
-  # quick passes NA properly
-  if (quick) {
-    ret <- data.frame(term = names(co), estimate = unname(co))
-    return(process_lm(ret, x, conf.int = FALSE, exponentiate = exponentiate))
-  } else {
-    # This line exists to make it possible to call tidy2.lm on glm models. (glm
-    # models inherit from lm models) The way tidy.lm works is that a model is
-    # first summarized with `summary()` and then tidied using tidy.summary.lm
-    # before going on to other functions. There doesn't exist a
-    # broom::tidy.summary.glm method. broom just manually calls
-    # broom::tidy.summary.lm on the summary.glm object. For some reason, I can't
-    # find a way to invoke specifc methods of `tidy` using `::` notation..
-    # Knowing that it calls broom::tidy.summary.lm directly on the glm.summary
-    # object, I spoof the class to get the same results.
-    smry <- summary(x)
-    class(smry) <- 'summary.lm'
-    partial_tidy_model <- broom::tidy(smry)
+    out %<>%
+      dplyr::add_row(term = na_coefs)
 
-    # Coef of the regular model always seems to return an NA
-    if (any(rlang::are_na(co))) {
-
-      # left joining on ensures that the output is ordered in the same order as
-      # the output of 'confint' this makes the cbind in process_lm correct.
-      # Using dplyr::data_frame to avoid stupid stringsAsFactors nonsense.
-      partial_tidy_model <-
-        dplyr::left_join(dplyr::data_frame(term = names(co)), partial_tidy_model, by = 'term')
-    }
+    # Arrange in original order
+    out %<>%
+      dplyr::slice(match(.data$term, names(coefs)))
   }
 
-  tidy_model <-
-    process_lm(
-      partial_tidy_model,
-      x,
-      conf.int = conf.int,
-      conf.level = conf.level,
-      exponentiate = exponentiate
-    )
-
-  return(tidy_model)
-
+  out
 }
-
-#' helper function to process a tidied lm object. Taken from
-#' \url{https://github.com/tidyverse/broom/blob/master/R/lm_tidiers.R}
-#'
-#' Adds a confidence interval, and possibly exponentiates, a tidied object.
-#' Useful for operations shared between lm and biglm.
-#'
-#' @param ret data frame with a tidied version of a coefficient matrix
-#' @param x an "lm", "glm", "biglm", or "bigglm" object
-#' @param conf.int whether to include a confidence interval
-#' @param conf.level confidence level of the interval, used only if
-#'   \code{conf.int=TRUE}
-#' @param exponentiate whether to exponentiate the coefficient estimates and
-#'   confidence intervals (typical for logistic regression)
-#' @keywords internal
-process_lm <- function(ret, x, conf.int = FALSE, conf.level = .95,
-                       exponentiate = FALSE) {
-  if (exponentiate) {
-    # save transformation function for use on confidence interval
-    if (is.null(x$family) ||
-        (x$family$link != "logit" && x$family$link != "log")) {
-      warning(paste("Exponentiating coefficients, but model did not use",
-                    "a log or logit link function"))
-    }
-    trans <- exp
-  } else {
-    trans <- identity
-  }
-
-  if (conf.int) {
-    # avoid "Waiting for profiling to be done..." message
-    CI <- suppressMessages(stats::confint(x, level = conf.level))
-
-    perc_levels <- colnames(CI)
-    CI_nms <- c(paste('conf.low', perc_levels[[1]]), paste('conf.high', perc_levels[[2]]))
-    colnames(CI) <- CI_nms
-
-    # This should never happen due to the left_join but in case I want to get
-    # rid of left join this check is here.
-
-    stopifnot(all(rownames(CI) == ret$term))
-    ret <- cbind(ret, trans(biodatacoreUtils::unrowname(CI)))
-  }
-  ret$estimate <- trans(ret$estimate)
-
-  ret
-}
-
-
 # Contextualize -----------------------------------------------------------
 
 
-#' Title
-#'
-#' @param ... Arguments passed to other methods. Currently unused.
-#'
-#' @return data frame
+
+#' @rdname lm_tidiers
 #' @export
 #'
 contextualize.lm <- function(x, ...) {
-  # It seems that residuals(x) might add in NA for observations that were
-  # removed during modeling due to NA. However, x$residuals seems to only be
-  # there for observations that were modeled.
-  sample_size <- length(x$residuals)
+
+  data_size <- nrow(x$data)
+  model_sample_size <- length(x$residuals)
   fo <- stats::formula(x)
 
 
   dplyr::data_frame(
-    sample_size = sample_size,
+    data_size = data_size,
+    model_sample_size = model_sample_size,
     formula = biodatacoreUtils::deparse2(fo),
     response = biodatacoreUtils::deparse2(rlang::f_lhs(fo)),
     control = biodatacoreUtils::deparse2(rlang::f_rhs(fo))
   )
 }
 
-#' Title
-#'
-#' @param ... Arguments passed to other methods. Currently unused.
-#'
-#' @return data frame
+#' @rdname lm_tidiers
 #' @export
 #'
 contextualize.glm <- function(x, ...) {

@@ -3,5 +3,3 @@
 ^packrat/
 ^\.Rprofile$
 ^NEWS\.md$
-preprocessing.R
-lm_rank.R
